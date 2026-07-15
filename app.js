@@ -8,6 +8,7 @@ const Z = {
 const L=x=>Z[x]||String(x||"").replaceAll("_"," ");
 let all=[], view="timeline";
 const $=x=>document.querySelector(x);
+const statusFilter=$("#status"), closeButton=$("#close");
 const counts=(a,k)=>Object.entries(a.reduce((o,p)=>{const v=p[k]||"未标明";o[v]=(o[v]||0)+1;return o},{})).sort((a,b)=>b[1]-a[1]);
 
 fetch("./policies.json").then(r=>{if(!r.ok)throw Error(`数据读取失败：${r.status}`);return r.json()}).then(x=>{all=x;$("#total").textContent=x.length;setup();render()}).catch(e=>{$("#canvas").innerHTML=`<p class="error">${e.message}，请刷新页面或检查 policies.json。</p>`});
@@ -17,11 +18,11 @@ function setup(){
   options("#economy",counts(all,"economy"),false); options("#domain",counts(all,"domain")); options("#purpose",counts(all,"rationale")); options("#status",counts(all,"status"));
   for(let y=2015;y<=2026;y++){from.add(new Option(y,y));to.add(new Option(y,y))} from.value=2015;to.value=2026;
   document.querySelectorAll("input,select").forEach(e=>e.oninput=render);
-  reset.onclick=()=>{q.value="";economy.value=domain.value=purpose.value=status.value="全部";from.value=2015;to.value=2026;render()};
+  reset.onclick=()=>{q.value="";economy.value=domain.value=purpose.value=statusFilter.value="全部";from.value=2015;to.value=2026;render()};
   document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));render()});
-  close.onclick=()=>detail.close();
+  closeButton.onclick=()=>detail.close();
 }
-function filtered(){const s=q.value.trim().toLowerCase();return all.filter(p=>(economy.value==="全部"||p.economy===economy.value)&&(domain.value==="全部"||p.domain===domain.value)&&(purpose.value==="全部"||p.rationale===purpose.value)&&(status.value==="全部"||p.status===status.value)&&+p.announced.slice(0,4)>=+from.value&&+p.announced.slice(0,4)<=+to.value&&(!s||[p.name,p.originalName,p.authority,p.summary,p.instrument,p.targetIndustry].join(" ").toLowerCase().includes(s)))}
+function filtered(){const s=q.value.trim().toLowerCase();return all.filter(p=>(economy.value==="全部"||p.economy===economy.value)&&(domain.value==="全部"||p.domain===domain.value)&&(purpose.value==="全部"||p.rationale===purpose.value)&&(statusFilter.value==="全部"||p.status===statusFilter.value)&&+p.announced.slice(0,4)>=+from.value&&+p.announced.slice(0,4)<=+to.value&&(!s||[p.name,p.originalName,p.authority,p.summary,p.instrument,p.targetIndustry].join(" ").toLowerCase().includes(s)))}
 function render(){const a=filtered();count.textContent=a.length;ecount.textContent=new Set(a.map(p=>p.economy)).size;active.textContent=a.filter(p=>p.status==="effective").length;verify.textContent=a.filter(p=>p.uncertain).length;({timeline,compare,tools,table}[view])(a)}
 function timeline(a){const es=counts(a,"economy"),ys=[];for(let y=+from.value;y<=+to.value;y++)ys.push(y);const max=Math.max(1,...ys.flatMap(y=>es.map(([e])=>a.filter(p=>p.economy===e&&p.announced.startsWith(String(y))).length)));canvas.innerHTML=ys.map(y=>`<div class="year"><b>${y}</b><div class="bars">${es.map(([e])=>{const n=a.filter(p=>p.economy===e&&p.announced.startsWith(String(y))).length;return n?`<button class="bar" style="width:${Math.max(5,n/max*100)}%">${e} ${n}</button>`:""}).join("")}</div></div>`).join("")}
 function compare(a){const c=counts(a,"economy"),m=Math.max(1,...c.map(x=>x[1]));canvas.innerHTML='<h2>经济体政策构成</h2>'+c.map(([e,n])=>`<div class="compare-row"><header><b>${e}</b><span>${n}项</span></header><div class="track"><i style="width:${n/m*100}%"></i></div></div>`).join("")}
