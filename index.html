@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>地缘经济政策图谱</title><meta name="description" content="主要经济体地缘经济政策研究工作台">
+<link rel="stylesheet" href="style.css"></head><body>
+<main><header class="mast"><div><p class="eyebrow">全球政策研究工作台</p><h1>地缘经济政策图谱</h1><p>主要经济体政策事件的检索、比较与证据追踪工作台</p></div><div class="scope"><b id="total">—</b><span>项政策事件</span><small>按实际纳入结果呈现，不设等额配额</small></div></header>
+<section class="filters"><label>关键词<input id="q" placeholder="政策、机构、产业或技术"></label><label>经济体<select id="economy"></select></label><label>政策领域<select id="domain"></select></label><label>主要目的<select id="purpose"></select></label><label>有效状态<select id="status"></select></label><label>起始年份<select id="from"></select></label><label>截止年份<select id="to"></select></label><button id="reset">重置</button></section>
+<section class="stats"><div><b id="count">—</b><span>符合条件的政策事件</span></div><div><b id="ecount">—</b><span>经济体</span></div><div><b id="active">—</b><span>当前生效</span></div><div><b id="verify">—</b><span>后续状态待核验</span></div></section>
+<nav><button data-view="timeline" class="on">时间线</button><button data-view="compare">国家比较</button><button data-view="tools">政策工具</button><button data-view="table">政策明细</button></nav>
+<section id="canvas" class="canvas"></section>
+<section class="method"><h2>口径与证据</h2><p><b>分析单位</b>　一项可识别公布时间和政策动作的政策事件；修订、暂停和终止可另建事件并关联。</p><p><b>数量解释</b>　当前为目的性样本，不将事件数直接解释为政策强度，也不人为保持各经济体数量一致。</p><p><b>待核验含义</b>　政策及官方来源已经确认，但临时措施是否终止、后续修订是否替代原措施等动态状态尚未闭合；它不表示政策真实性存疑。</p></section>
+<footer>版权所有 © 567seminar团队　｜　设计者：蒋飞</footer></main>
+<dialog id="detail"><button id="close">关闭</button><div id="detailbody"></div></dialog>
+<script src="app.js"></script></body></html>
